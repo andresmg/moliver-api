@@ -39,19 +39,7 @@ app.use((req, _, next) => {
  * Configure routes
  */
 const userRouter = require('./routes/user.routes.js')
-const crudRouter = require('./routes/crud.routes.js')
-const dataRouter = require('./routes/data.routes.js')
-const gymRouter = require('./routes/gym.routes.js')
-const instructorRouter = require('./routes/instructor.routes')
-const lessonRouter = require('./routes/lesson.routes')
-const classroomRouter = require('./routes/classroom.routes')
 app.use('/', userRouter)
-app.use('/', crudRouter)
-app.use('/', dataRouter)
-app.use('/', gymRouter)
-app.use('/', instructorRouter)
-app.use('/', lessonRouter)
-app.use('/', classroomRouter)
 
 
 // catch 404 and forward to error handler
@@ -87,7 +75,7 @@ app.use(function (error, req, res, next) {
 /** 
  * Listen on provided port
  */
-const port = normalizePort(process.env.PORT || '3010')
+const port = normalizePort(process.env.PORT || '3001')
 app.listen(port, () => {
   console.log(`Listening on port ${port}`)
 })

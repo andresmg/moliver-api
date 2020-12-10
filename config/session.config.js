@@ -5,7 +5,7 @@ const SESSION_MAX_AGE_SECONDS = Number(process.env.SESSION_MAX_AGE_SECONDS) || 6
 
 //LOCALHOST
 module.exports = session({
-  secret: process.env.SESSION_SECRET || 'Victsapi',
+  secret: process.env.SESSION_SECRET || 'Moliver',
   resave: true,
   saveUninitialized: false,
   cookie: {
@@ -22,7 +22,7 @@ module.exports = session({
 
 //HEROKU
 // module.exports = session({
-//   secret: process.env.SESSION_SECRET || 'Victsapi',
+//   secret: process.env.SESSION_SECRET || 'Moliver',
 //   resave: true,
 //   saveUninitialized: false,
 //   cookie: {

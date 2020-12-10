@@ -2,9 +2,6 @@ const {Schema, model} = require('mongoose')
 const bcrypt = require("bcrypt")
 const EMAIL_PATTERN = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
 const SALT_WORK_FACTOR = 10
-const Lesson = require('../models/Lesson.model')
-const Reservations = require('../models/Reservations.model')
-const Waitinglist = require('../models/Waitinglist.model')
 
 const generateRandomToken = () => {
   const characters =
@@ -16,25 +13,28 @@ const generateRandomToken = () => {
   return token
 }
 
+const History = require('./History.model')
+const Biopsy = require('./Biopsy.model')
+
 const userSchema = new Schema({
   name: {
     type: String,
-    required: [true, 'Name is required'],
-    minlength: [3, 'Name needs at last 8 chars'],
+    required: [true, 'El nombre es obligatorio'],
+    minlength: [1, 'El nombre debe tener al menos dos caracteres'],
     trim: true
   },
   email: {
     type: String,
-    required: [true, 'Email is required'],
+    required: [true, 'El Email es obligatorio'],
     unique: true,
     trim: true,
     lowercase: true,
-    match: [EMAIL_PATTERN, 'Email is invalid']
+    match: [EMAIL_PATTERN, 'El Email es inválido']
   },
   password: {
     type: String,
-    required: [true, 'Password is required'],
-    minlength: [8, 'Password needs at last 8 chars']
+    required: [true, 'La contraseña es obligatoria'],
+    minlength: [8, 'La contraseña debe tener ocho caracteres']
   },
   avatar: {
     type: String,
@@ -54,21 +54,17 @@ const userSchema = new Schema({
     type: String,
     trim: true
   },
-  packages: {
-    type: Number,
-    default: 0
+  birthdate: {
+    type: Date,
+    required: [true, 'La fecha de nacimiento es obligatoria']
   },
-  following: {
-    type: [String],
-    default: []
-  },
-  followers: {
-    type: [String],
-    default: []
+  sex: {
+    type: String,
+    enum: ['Hombre', 'Mujer']
   },
   role: {
     type: String,
-    enum: ['Guest', 'Gym', 'Instructor', 'Admin'],
+    enum: ['Guest', 'Admin'],
     default: 'Guest'
   },
   activation: {
@@ -94,8 +90,8 @@ const userSchema = new Schema({
       ret.id = doc._id
       delete ret._id
       delete ret.__v
-      // delete ret.password
-      // delete ret.createdAt
+      delete ret.password
+      delete ret.createdAt
       delete ret.updatedAt
       return ret
     }
@@ -125,20 +121,14 @@ userSchema.methods.checkPassword = function (password) {
   return bcrypt.compare(password, this.password)
 }
 
-userSchema.virtual("lessons", {
-  ref: 'Lesson',
+userSchema.virtual("stories", {
+  ref: 'History',
   localField: '_id',
   foreignField: 'user'
 })
 
-userSchema.virtual("reservations", {
-  ref: 'Reservations',
-  localField: '_id',
-  foreignField: 'user'
-})
-
-userSchema.virtual("waitinglists", {
-  ref: 'Waitinglist',
+userSchema.virtual("biopsies", {
+  ref: 'Biopsy',
   localField: '_id',
   foreignField: 'user'
 })
