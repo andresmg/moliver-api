@@ -39,7 +39,9 @@ app.use((req, _, next) => {
  * Configure routes
  */
 const userRouter = require('./routes/user.routes.js')
+const crudRouter = require('./routes/crud.routes.js')
 app.use('/', userRouter)
+app.use('/', crudRouter)
 
 
 // catch 404 and forward to error handler

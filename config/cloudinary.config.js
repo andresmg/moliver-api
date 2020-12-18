@@ -12,7 +12,7 @@ cloudinary.config({
 
 var storage = cloudinaryStorage({
   cloudinary: cloudinary,
-  folder: 'victs', // The name of the folder in cloudinary
+  folder: 'moliver', // The name of the folder in cloudinary
   allowedFormats: ['jpg', 'png', 'svg']
   ,
   filename: function (req, file, cb) {

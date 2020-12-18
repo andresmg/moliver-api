@@ -1,16 +1,21 @@
 const {Schema, model, ObjectId} = require('mongoose')
 require('./User.model')
 
-const historySchema = new Schema({
+const dateSchema = new Schema({
     user: {
         type: [ObjectId],
-        ref: 'User'
+        ref: 'User',
+        required: true
     },
     title: {
         type: String
     },
     resume: {
         type: String
+    },
+    pics: {
+        type: [String],
+        default: []
     },
     treatment: {
         type: String,
@@ -31,4 +36,4 @@ const historySchema = new Schema({
     }
 })
 
-module.exports = model("History", historySchema)
+module.exports = model("Date", dateSchema)

@@ -1,6 +1,8 @@
 const mongoose = require("mongoose")
 
 const User = require("../models/User.model")
+const Biopsy = require("../models/Biopsy.model")
+const Dates = require("../models/Date.model")
 const createError = require("http-errors")
 
 const nodemailer = require("../config/mailer.config")
@@ -13,21 +15,29 @@ module.exports.doLogin = (req, res, next) => {
   const {email, password} = req.body
 
   if (!email || !password) {
-    throw createError(400, "Missing credentials")
+    throw createError(400, "Ingresa tu usuario y/o contraseña")
   }
 
   User.findOne({email: email})
+    .populate('biopsies')
+    .populate({
+      path: "biopsies",
+      populate: {
+        path: "date",
+        model: "Date",
+      },
+    })
     .then((user) => {
       if (!user) {
-        throw createError(404, "User not found, please try again")
+        throw createError(404, "Usuario no encontrado, por favor, intenta nuevamente")
       } else if (user.activation.active === false) {
-        throw createError(404, "User is not active, please check your email")
+        throw createError(404, "Tu cuenta no ha sido activada, por favor, revisa tu correo.")
       } else {
         return user
           .checkPassword(password)
           .then((match) => {
             if (!match) {
-              throw createError(400, "Invalid password, please try again")
+              throw createError(400, "Error de usuario y/o contraseña")
             } else {
               req.session.user = user
               if (user.role === "Guest") {
@@ -48,7 +58,7 @@ module.exports.activateUser = (req, res, next) => {
     .then((user) => {
       if (user) {
         if (user.activation.active === true) {
-          throw createError(401, "User is already active")
+          throw createError(401, "Tu cuenta ya está activada.")
         } else {
           user.activation.active = true
           user
@@ -56,12 +66,12 @@ module.exports.activateUser = (req, res, next) => {
             .then((user) => {
               res
                 .status(201)
-                .json({message: `${user.name}'s account has been activated`})
+                .json({message: `¡${user.name}, tu cuenta ha sido activada!`})
             })
             .catch(next)
         }
       } else {
-        throw createError(400, "Oops! invalid token")
+        throw createError(400, "¡Oops! error en el link usado.")
       }
     })
     .catch(next)
@@ -70,5 +80,5 @@ module.exports.activateUser = (req, res, next) => {
 
 module.exports.logout = (req, res) => {
   req.session.destroy()
-  res.status(204).json({message: "Bye! Come back soon!"})
+  res.status(204).json({message: "¡Hasta luego! ¡regresa pronto!"})
 }

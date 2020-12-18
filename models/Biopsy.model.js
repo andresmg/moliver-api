@@ -1,10 +1,17 @@
 const {Schema, model, ObjectId} = require('mongoose')
-require('./History.model')
+require('./Date.model')
+require('./User.model')
 
 const biopsySchema = new Schema({
-    history: {
+    user: {
         type: [ObjectId],
-        ref: 'History'
+        ref: 'User',
+        required: true
+    },
+    date: {
+        type: [ObjectId],
+        ref: 'Date',
+        required: true
     },
     pics: {
         type: [String],

@@ -13,7 +13,7 @@ const generateRandomToken = () => {
   return token
 }
 
-const History = require('./History.model')
+const Dates = require('./Date.model')
 const Biopsy = require('./Biopsy.model')
 
 const userSchema = new Schema({
@@ -36,6 +36,12 @@ const userSchema = new Schema({
     required: [true, 'La contraseña es obligatoria'],
     minlength: [8, 'La contraseña debe tener ocho caracteres']
   },
+  dni: {
+    type: String,
+    required: [true, 'La cédula es obligatoria'],
+    minlength: [3, 'La cédula debe tener al menos tres números'],
+    trim: true
+  },
   avatar: {
     type: String,
   },
@@ -55,8 +61,7 @@ const userSchema = new Schema({
     trim: true
   },
   birthdate: {
-    type: Date,
-    required: [true, 'La fecha de nacimiento es obligatoria']
+    type: Date
   },
   sex: {
     type: String,
@@ -78,9 +83,7 @@ const userSchema = new Schema({
     }
   },
   social: {
-    google: String,
-    facebook: String,
-    slack: String
+    google: String
   },
 }, {
   timestamps: true,
@@ -90,7 +93,7 @@ const userSchema = new Schema({
       ret.id = doc._id
       delete ret._id
       delete ret.__v
-      delete ret.password
+      //delete ret.password
       delete ret.createdAt
       delete ret.updatedAt
       return ret
@@ -121,8 +124,8 @@ userSchema.methods.checkPassword = function (password) {
   return bcrypt.compare(password, this.password)
 }
 
-userSchema.virtual("stories", {
-  ref: 'History',
+userSchema.virtual("dates", {
+  ref: 'Date',
   localField: '_id',
   foreignField: 'user'
 })
