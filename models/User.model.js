@@ -13,7 +13,6 @@ const generateRandomToken = () => {
   return token
 }
 
-const Dates = require('./Date.model')
 const Biopsy = require('./Biopsy.model')
 
 const userSchema = new Schema({
@@ -42,7 +41,7 @@ const userSchema = new Schema({
     minlength: [3, 'La cédula debe tener al menos tres números'],
     trim: true
   },
-  avatar: {
+  reference: {
     type: String,
   },
   address: {
@@ -94,7 +93,7 @@ const userSchema = new Schema({
       delete ret._id
       delete ret.__v
       //delete ret.password
-      delete ret.createdAt
+      //delete ret.createdAt
       delete ret.updatedAt
       return ret
     }
@@ -123,12 +122,6 @@ userSchema.pre("save", function (next) {
 userSchema.methods.checkPassword = function (password) {
   return bcrypt.compare(password, this.password)
 }
-
-userSchema.virtual("dates", {
-  ref: 'Date',
-  localField: '_id',
-  foreignField: 'user'
-})
 
 userSchema.virtual("biopsies", {
   ref: 'Biopsy',

@@ -2,7 +2,6 @@ const mongoose = require("mongoose")
 
 const User = require("../models/User.model")
 const Biopsy = require("../models/Biopsy.model")
-const Dates = require("../models/Date.model")
 const createError = require("http-errors")
 
 const nodemailer = require("../config/mailer.config")
@@ -23,8 +22,8 @@ module.exports.doLogin = (req, res, next) => {
     .populate({
       path: "biopsies",
       populate: {
-        path: "date",
-        model: "Date",
+        path: "user",
+        model: "User",
       },
     })
     .then((user) => {

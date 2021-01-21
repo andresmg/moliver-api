@@ -1,5 +1,4 @@
 const {Schema, model, ObjectId} = require('mongoose')
-require('./Date.model')
 require('./User.model')
 
 const biopsySchema = new Schema({
@@ -8,16 +7,22 @@ const biopsySchema = new Schema({
         ref: 'User',
         required: true
     },
-    date: {
-        type: [ObjectId],
-        ref: 'Date',
-        required: true
+    number: {
+        type: String
     },
-    pics: {
-        type: [String],
-        default: []
+    reference: {
+        type: String
     },
-    resume: {
+    material: {
+        type: String
+    },
+    clinic_diagnosis: {
+        type: String
+    },
+    report: {
+        type: String
+    },
+    diagnostics: {
         type: String
     }
 }, {
@@ -26,6 +31,7 @@ const biopsySchema = new Schema({
         virtuals: true,
         transform: (doc, ret) => {
             ret.id = doc._id
+            ret.date = doc.createdAt
             delete ret._id
             delete ret.__v
             delete ret.createdAt
