@@ -37,7 +37,6 @@ const userSchema = new Schema({
   },
   dni: {
     type: String,
-    required: [true, 'La cédula es obligatoria'],
     minlength: [3, 'La cédula debe tener al menos tres números'],
     trim: true
   },
