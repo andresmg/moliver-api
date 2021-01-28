@@ -3,7 +3,7 @@ require('./User.model')
 
 const biopsySchema = new Schema({
     user: {
-        type: [ObjectId],
+        type: ObjectId,
         ref: 'User',
         required: true
     },
