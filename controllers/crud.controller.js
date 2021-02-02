@@ -7,10 +7,10 @@ const mongoose = require('mongoose')
 const nodemailer = require('../config/mailer.config')
 
 module.exports.createUser = (req, res, next) => {
-  const {email, password, name} = req.body
+  const {email, password, name, dni} = req.body
 
-  if (!email || !password || !name) {
-    throw createError(400, 'Todos los campos son obligatorios. Por favor ingresa tu nombre, correo y contraseña.')
+  if (!email || !password || !name || !dni) {
+    throw createError(400, 'Todos los campos son obligatorios. Por favor ingresa tu nombre, correo, cédula y contraseña.')
   }
 
   const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/
@@ -25,7 +25,8 @@ module.exports.createUser = (req, res, next) => {
       return User.create({
         name,
         email,
-        password
+        password,
+        dni
       })
     })
     .then((user) => {
