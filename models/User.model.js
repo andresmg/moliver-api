@@ -40,9 +40,6 @@ const userSchema = new Schema({
     minlength: [3, 'La cédula debe tener al menos tres números'],
     trim: true
   },
-  reference: {
-    type: String,
-  },
   address: {
     type: String,
     trim: true

@@ -4,6 +4,7 @@ const faker = require("faker")
 
 const User = require("../models/User.model")
 const Biopsy = require("../models/Biopsy.model")
+const BiopsyNumber = require("../models/BiopsyNumber.model")
 
 const userN = 90
 const biopsyN = 3
@@ -12,9 +13,15 @@ let num = 1
 
 Promise.all([
   User.deleteMany(),
-  Biopsy.deleteMany()
+  Biopsy.deleteMany(),
+  BiopsyNumber.deleteMany()
 ])
   .then(() => {
+
+    const biopsynumber = new BiopsyNumber()
+    biopsynumber.save()
+      .then(b => console.log('paciente creado'))
+      .catch((e) => console.log(e))
 
     for (let i = 0; i < userN; i++) {
       const user = new User({

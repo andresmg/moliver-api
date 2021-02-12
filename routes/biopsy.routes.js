@@ -6,7 +6,11 @@ const biopsyController = require("../controllers/biopsy.controller")
 module.exports = router
 
 //Biopsy controller
-router.get("/biopsy/:id/delete", 
-authMiddleware.isAuthenticated, 
-biopsyController.dropBiopsy
+router.get("/biopsy/:id/delete",
+    authMiddleware.isAuthenticated,
+    biopsyController.dropBiopsy
 )
+
+router.post('/biopsy/add',
+authMiddleware.isAuthenticated,
+biopsyController.addBiopsy)
