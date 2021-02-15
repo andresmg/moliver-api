@@ -11,7 +11,7 @@ module.exports.getAllbiopsies = (req, res, next) => {
     if (userRole === 'Admin') {
         Biopsy.find()
             .populate("user")
-            .sort({date: 1})
+            .sort({updatedAt: -1})
             .then((biopsies) => {
                 res.status(201).json(biopsies)
             })

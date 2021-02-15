@@ -29,6 +29,16 @@ module.exports.addBiopsy = (req, res, next) => {
 
     const months = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L']
 
+    const chars = 'abcdefghijklmnopqrstuvwxyz1234567890'
+
+    const emailer = () => {
+        let string = ''
+        for (let i = 0; i < 15; i++) {
+            string += chars[Math.floor(Math.random() * chars.length)]
+        }
+        return string
+    }
+
     const getDay = new Date().getDate()
 
     const createBiopsy = (b, u) => {
@@ -49,22 +59,9 @@ module.exports.addBiopsy = (req, res, next) => {
             .catch(e => console.log(e))
     }
 
-    User.find({dni: dni})
-        .then(user => {
-            if (!user) {
-                User.create({
-                    name: name,
-                    email: "provicional@gmail.com",
-                    password: "Moliver123",
-                    dni: dni,
-                    role: 'Guest'
-                })
-            }
-        })
-        .catch(e => console.log(e))
 
     if (userRole === 'Admin') {
-        if (getDay == 1) {
+        if (getDay == 15) {
             BiopsyNumber.find()
                 .then(b => {
                     if (new Date(b[0].updatedAt).getMonth() < new Date().getMonth()) {
@@ -74,7 +71,35 @@ module.exports.addBiopsy = (req, res, next) => {
                                     .then(b => {
                                         User.find({dni: dni})
                                             .then(user => {
-                                                createBiopsy(b, user)
+                                                if (!user.length) {
+                                                    User.create({
+                                                        name: name,
+                                                        email: `${emailer()}@provicional.com`,
+                                                        password: "Moliver123",
+                                                        dni: dni,
+                                                        role: 'Guest'
+                                                    })
+                                                        .then(user => {
+                                                            Biopsy.create({
+                                                                user: user.id,
+                                                                number: `${months[new Date().getMonth()]} - ${b.number} - ${new Date().getFullYear()}`,
+                                                                clinic_diagnosis,
+                                                                diagnostics,
+                                                                dni,
+                                                                material,
+                                                                name,
+                                                                reference,
+                                                                report
+                                                            })
+                                                                .then((newBiopsy) => {
+                                                                    res.status(201).json(newBiopsy)
+                                                                })
+                                                                .catch(e => console.log(e))
+                                                        })
+                                                        .catch(e => console.log(e))
+                                                } else {
+                                                    createBiopsy(b, user)
+                                                }
                                             })
                                             .catch(e => console.log(e))
                                     })
@@ -88,7 +113,35 @@ module.exports.addBiopsy = (req, res, next) => {
                                     .then(b => {
                                         User.find({dni: dni})
                                             .then(user => {
-                                                createBiopsy(b, user)
+                                                if (!user.length) {
+                                                    User.create({
+                                                        name: name,
+                                                        email: `${emailer()}@provicional.com`,
+                                                        password: "Moliver123",
+                                                        dni: dni,
+                                                        role: 'Guest'
+                                                    })
+                                                        .then(user => {
+                                                            Biopsy.create({
+                                                                user: user.id,
+                                                                number: `${months[new Date().getMonth()]} - ${b.number} - ${new Date().getFullYear()}`,
+                                                                clinic_diagnosis,
+                                                                diagnostics,
+                                                                dni,
+                                                                material,
+                                                                name,
+                                                                reference,
+                                                                report
+                                                            })
+                                                                .then((newBiopsy) => {
+                                                                    res.status(201).json(newBiopsy)
+                                                                })
+                                                                .catch(e => console.log(e))
+                                                        })
+                                                        .catch(e => console.log(e))
+                                                } else {
+                                                    createBiopsy(b, user)
+                                                }
                                             })
                                             .catch(e => console.log(e))
                                     })
@@ -101,6 +154,7 @@ module.exports.addBiopsy = (req, res, next) => {
         } else {
             BiopsyNumber.find()
                 .then(b => {
+                    console.log('seguro estoy aqui')
                     BiopsyNumber.findByIdAndUpdate(b[0].id,
                         {
                             $inc: {number: +1}
@@ -109,7 +163,35 @@ module.exports.addBiopsy = (req, res, next) => {
                         .then(b => {
                             User.find({dni: dni})
                                 .then(user => {
-                                    createBiopsy(b, user)
+                                    if (!user.length) {
+                                        User.create({
+                                            name: name,
+                                            email: `${emailer()}@provicional.com`,
+                                            password: "Moliver123",
+                                            dni: dni,
+                                            role: 'Guest'
+                                        })
+                                            .then(user => {
+                                                Biopsy.create({
+                                                    user: user.id,
+                                                    number: `${months[new Date().getMonth()]} - ${b.number} - ${new Date().getFullYear()}`,
+                                                    clinic_diagnosis,
+                                                    diagnostics,
+                                                    dni,
+                                                    material,
+                                                    name,
+                                                    reference,
+                                                    report
+                                                })
+                                                    .then((newBiopsy) => {
+                                                        res.status(201).json(newBiopsy)
+                                                    })
+                                                    .catch(e => console.log(e))
+                                            })
+                                            .catch(e => console.log(e))
+                                    } else {
+                                        createBiopsy(b, user)
+                                    }
                                 })
                                 .catch(e => console.log(e))
                         })
