@@ -154,7 +154,6 @@ module.exports.addBiopsy = (req, res, next) => {
         } else {
             BiopsyNumber.find()
                 .then(b => {
-                    console.log('seguro estoy aqui')
                     BiopsyNumber.findByIdAndUpdate(b[0].id,
                         {
                             $inc: {number: +1}
