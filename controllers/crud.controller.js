@@ -18,39 +18,75 @@ module.exports.createUser = (req, res, next) => {
   if (!regex.test(password)) {
     throw createError(400, 'La contraseña debe tener mínimo 6 caracteres y debe contener al menos un número y una letra mayúscula.')
   }
-  bcryptjs
-    .genSalt(saltRounds)
-    .then((salt) => bcryptjs.hash(password, salt))
-    .then(() => {
-      return User.create({
-        name,
-        email,
-        password,
-        dni
-      })
-    })
-    .then((user) => {
-      nodemailer.sendValidationEmail(
-        user.email,
-        user.activation.token,
-        user.name
-      )
-      res.json({
-        message: 'Revisa tu correo para activar tu cuenta.',
-        token: user.activation.token
-      })
-      throw ('El usuario ya ha sido activado.')
-    })
-    .catch((error) => {
-      if (error instanceof mongoose.Error.ValidationError) {
-        res.json({error: error.errors})
-      } else if (error.code === 11000) {
-        throw createError(400, 'El correo ya está registrado.')
+
+  User.find({dni: dni})
+    .then(user => {
+      if (user.length && user[0].email.includes('provicional')) {
+        bcryptjs
+          .genSalt(saltRounds)
+          .then((salt) => bcryptjs.hash(password, salt))
+          .then((newHashedPassword) => {
+            return User.findByIdAndUpdate(user[0]._id, {email, password: newHashedPassword, name}, {new: true})
+              .then((user) => {
+                nodemailer.sendValidationEmail(
+                  user.email,
+                  user.activation.token,
+                  user.name
+                )
+                res.json({
+                  message: 'Revisa tu correo para activar tu cuenta.',
+                  token: user.activation.token
+                })
+                throw ('El usuario ya ha sido activado.')
+              })
+              .catch((error) => {
+                if (error instanceof mongoose.Error.ValidationError) {
+                  res.json({error: error.errors})
+                } else if (error.code === 11000) {
+                  throw createError(400, 'El correo o dni ya está registrado.')
+                } else {
+                  next(error)
+                }
+              })
+              .catch(next)
+          })
       } else {
-        next(error)
+        bcryptjs
+          .genSalt(saltRounds)
+          .then((salt) => bcryptjs.hash(password, salt))
+          .then(() => {
+            return User.create({
+              name,
+              email,
+              password,
+              dni
+            })
+          })
+          .then((user) => {
+            nodemailer.sendValidationEmail(
+              user.email,
+              user.activation.token,
+              user.name
+            )
+            res.json({
+              message: 'Revisa tu correo para activar tu cuenta.',
+              token: user.activation.token
+            })
+            throw ('El usuario ya ha sido activado.')
+          })
+          .catch((error) => {
+            if (error instanceof mongoose.Error.ValidationError) {
+              res.json({error: error.errors})
+            } else if (error.code === 11000) {
+              throw createError(400, 'El correo o dni ya está registrado.')
+            } else {
+              next(error)
+            }
+          })
+          .catch(next)
       }
     })
-    .catch(next)
+    .catch(e => console.log(e))
 }
 
 module.exports.deleteUser = (req, res, next) => {

@@ -38,7 +38,8 @@ const userSchema = new Schema({
   dni: {
     type: String,
     minlength: [3, 'La cédula debe tener al menos tres números'],
-    trim: true
+    trim: true,
+    unique: true,
   },
   address: {
     type: String,

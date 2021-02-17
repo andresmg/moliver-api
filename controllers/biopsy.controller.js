@@ -61,7 +61,7 @@ module.exports.addBiopsy = (req, res, next) => {
 
 
     if (userRole === 'Admin') {
-        if (getDay == 15) {
+        if (getDay == 1) {
             BiopsyNumber.find()
                 .then(b => {
                     if (new Date(b[0].updatedAt).getMonth() < new Date().getMonth()) {
@@ -73,10 +73,10 @@ module.exports.addBiopsy = (req, res, next) => {
                                             .then(user => {
                                                 if (!user.length) {
                                                     User.create({
-                                                        name: name,
+                                                        name,
                                                         email: `${emailer()}@provicional.com`,
                                                         password: "Moliver123",
-                                                        dni: dni,
+                                                        dni,
                                                         role: 'Guest'
                                                     })
                                                         .then(user => {
@@ -115,10 +115,10 @@ module.exports.addBiopsy = (req, res, next) => {
                                             .then(user => {
                                                 if (!user.length) {
                                                     User.create({
-                                                        name: name,
+                                                        name,
                                                         email: `${emailer()}@provicional.com`,
                                                         password: "Moliver123",
-                                                        dni: dni,
+                                                        dni,
                                                         role: 'Guest'
                                                     })
                                                         .then(user => {
@@ -165,10 +165,10 @@ module.exports.addBiopsy = (req, res, next) => {
                                 .then(user => {
                                     if (!user.length) {
                                         User.create({
-                                            name: name,
+                                            name,
                                             email: `${emailer()}@provicional.com`,
                                             password: "Moliver123",
-                                            dni: dni,
+                                            dni,
                                             role: 'Guest'
                                         })
                                             .then(user => {
