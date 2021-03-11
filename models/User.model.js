@@ -63,6 +63,14 @@ const userSchema = new Schema({
     type: String,
     enum: ['Hombre', 'Mujer']
   },
+  insurance_carrier: {
+    type: String,
+    trim: true
+  },
+  marital_status: {
+    type: String,
+    enum: ['Soltero/a', 'Casado/a']
+  },
   role: {
     type: String,
     enum: ['Guest', 'Admin'],

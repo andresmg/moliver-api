@@ -1,10 +1,9 @@
 const {Schema, model, ObjectId} = require('mongoose')
 require('./User.model')
-require('./Biopsy.model')
 
-const dateSchema = new Schema({
+const recipeSchema = new Schema({
     user: {
-        type: [ObjectId],
+        type: ObjectId,
         ref: 'User',
         required: true
     },
@@ -12,6 +11,9 @@ const dateSchema = new Schema({
         type: Date,
         required: [true, 'La fecha es obligatoria']
     },
+    recipe: {
+        type: String
+    }
 }, {
     timestamps: true,
     toJSON: {
@@ -28,4 +30,9 @@ const dateSchema = new Schema({
     }
 })
 
-module.exports = model("Date", dateSchema)
+module.exports = model("Recipe", recipeSchema)
+
+
+
+
+
