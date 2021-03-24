@@ -15,3 +15,8 @@ router.get('/patients',
     authMiddleware.isAuthenticated,
     adminController.getAllPatients
 )
+
+router.post('/add-date',
+    authMiddleware.isAuthenticated,
+    adminController.createDate
+)

@@ -27,7 +27,7 @@ module.exports.getAllPatients = (req, res, next) => {
 
     if (userRole === 'Admin') {
         User.find({role: 'Guest'})
-            .sort()
+            .sort({name: 1})
             .then(patients => {
                 res.status(201).json(patients)
             })
@@ -36,4 +36,21 @@ module.exports.getAllPatients = (req, res, next) => {
         req.session.destroy()
         res.status(204).json({message: "¡No tiene suficientes privilegios para realizar esta acción!"})
     }
+}
+
+module.exports.createDate = (req, res, next) => {
+    const {userId, date} = req.body
+
+    User.findByIdAndUpdate(userId, {
+        next_date: {
+            isDate: true,
+            date: date
+        },
+        new: true
+    })
+        .then((updatedUser) => {
+            res.status(201).json(updatedUser)
+        })
+        .catch((error) => next(createError(400, error)))
+
 }

@@ -59,6 +59,15 @@ const userSchema = new Schema({
   birthdate: {
     type: Date
   },
+  next_date: {
+    isDate: {
+      type: Boolean,
+      default: false
+    },
+    date: {
+      type: Date
+    }
+  },
   sex: {
     type: String,
     enum: ['Hombre', 'Mujer']
