@@ -21,3 +21,19 @@ module.exports.getAllbiopsies = (req, res, next) => {
         res.status(204).json({message: "¡No tiene suficientes privilegios para realizar esta acción!"})
     }
 }
+
+module.exports.getAllPatients = (req, res, next) => {
+    const userRole = req.session.user.role
+
+    if (userRole === 'Admin') {
+        User.find({role: 'Guest'})
+            .sort()
+            .then(patients => {
+                res.status(201).json(patients)
+            })
+            .catch(next)
+    } else {
+        req.session.destroy()
+        res.status(204).json({message: "¡No tiene suficientes privilegios para realizar esta acción!"})
+    }
+}

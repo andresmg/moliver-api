@@ -5,16 +5,19 @@ const faker = require("faker")
 const User = require("../models/User.model")
 const Biopsy = require("../models/Biopsy.model")
 const BiopsyNumber = require("../models/BiopsyNumber.model")
+const Dates = require("../models/Date.model")
 
 const userN = 90
 const biopsyN = 3
+const dateN = 1
 
 let num = 1
 
 Promise.all([
   User.deleteMany(),
   Biopsy.deleteMany(),
-  BiopsyNumber.deleteMany()
+  BiopsyNumber.deleteMany(),
+  Dates.deleteMany()
 ])
   .then(() => {
 
@@ -58,6 +61,17 @@ Promise.all([
             biopsy.save()
               .then(c => {
                 console.log(`biopsy added for ${u.email}`)
+              })
+              .catch((e) => console.log(e))
+          }
+          for (l = 0; l < dateN; l++) {
+            const date = new Dates({
+              user: u.id,
+              date: faker.date.future()
+            })
+            date.save()
+              .then(d => {
+                console.log(`date added for ${u.email}`)
               })
               .catch((e) => console.log(e))
           }

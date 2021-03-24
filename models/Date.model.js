@@ -4,7 +4,7 @@ require('./Biopsy.model')
 
 const dateSchema = new Schema({
     user: {
-        type: [ObjectId],
+        type: ObjectId,
         ref: 'User',
         required: true
     },
@@ -28,4 +28,4 @@ const dateSchema = new Schema({
     }
 })
 
-module.exports = model("Date", dateSchema)
+module.exports = model("Dates", dateSchema)

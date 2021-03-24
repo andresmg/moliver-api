@@ -96,6 +96,7 @@ const userSchema = new Schema({
     transform: (doc, ret) => {
       ret.id = doc._id
       delete ret._id
+      delete ret.activation
       delete ret.__v
       delete ret.password
       //delete ret.createdAt
