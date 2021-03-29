@@ -20,3 +20,8 @@ router.post('/add-date',
     authMiddleware.isAuthenticated,
     adminController.createDate
 )
+
+router.get('/delete-date/:id',
+    authMiddleware.isAuthenticated,
+    adminController.deleteDate
+)

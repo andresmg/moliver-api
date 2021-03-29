@@ -54,3 +54,19 @@ module.exports.createDate = (req, res, next) => {
         .catch((error) => next(createError(400, error)))
 
 }
+
+module.exports.deleteDate = (req, res, next) => {
+    const id = req.params.id
+
+    User.findByIdAndUpdate(id, {
+        next_date: {
+            isDate: false
+        },
+        new: true
+    })
+        .then((u) => {
+            console.log(u)
+            res.status(201).json(u)
+        })
+        .catch((error) => next(createError(400, error)))
+}
