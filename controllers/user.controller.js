@@ -30,7 +30,24 @@ module.exports.doLogin = (req, res, next) => {
       if (!user) {
         throw createError(404, "Usuario no encontrado, por favor, intenta nuevamente")
       } else if (user.role === "Temporary") {
-        console.log(`ESTE USUARIO NO ESTA ACTIVADO`)
+        console.log(`ESTE USUARIO TIENE QUE CAMBIAR SU CLAVE`)
+        return user
+          .checkPassword(password)
+          .then((match) => {
+            if (!match) {
+              throw createError(400, "Error de usuario y/o contraseña")
+            } else {
+              req.session.user = user
+              if (user.role === "Guest") {
+                res.status(201).json(user)
+              } else if (user.role === "Admin") {
+                res.status(201).json(user)
+              } else if (user.role === "Temporary") {
+                res.status(201).json(user)
+              }
+            }
+          })
+          .catch(next)
       } else if (user.activation.active === false) {
         throw createError(404, "Tu cuenta no ha sido activada, por favor, revisa tu correo.")
       } else {

@@ -26,7 +26,7 @@ module.exports.getAllPatients = (req, res, next) => {
     const userRole = req.session.user.role
 
     if (userRole === 'Admin') {
-        User.find({role: 'Guest'})
+        User.find({role: {$ne: 'Admin'}})
             .sort({name: 1})
             .then(patients => {
                 res.status(201).json(patients)

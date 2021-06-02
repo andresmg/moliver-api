@@ -156,33 +156,31 @@ module.exports.updateUserAvatar = (req, res, next) => {
 
 module.exports.updatePassword = (req, res, next) => {
   const id = req.params.id
-  const userPass = req.session.user.password
-
   const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/
 
+  console.table(req.body)
+  console.table(req.session.user)
+
   if (!regex.test(req.body.newpassword)) {
-    throw createError(400, 'La contraseña debe tener mínimo 6 caracteres y debe contener al menos un número y una letra mayúscula.')
+    throw createError(400, 'Password needs to have at least 6 chars and must contain at least one number, one lowercase and one uppercase letter.')
   }
-  bcryptjs
-    .compare(req.body.password, userPass)
-    .then((match) => {
-      if (match) {
-        bcryptjs
+
+  if (req.body.password === 'Paciente123') {
+    bcryptjs
           .genSalt(saltRounds)
           .then((salt) => bcryptjs.hash(req.body.newpassword, salt))
           .then((newHashedPassword) => {
             return User.findByIdAndUpdate(id, {
               password: newHashedPassword,
+              role: 'Guest',
               new: true
             })
           })
           .then(updatedPass => res.status(201).json(updatedPass))
           .catch(error => next(createError(400, error)))
-      } else {
-        throw createError(400, 'La contraseña actual es inválida.')
-      }
-    })
-    .catch(error => next(createError(400, error)))
+  } else {
+    throw createError(400, 'La contraseña actual no es correcta, ponte en contacto con el consultorio.')
+  }
 }
 
 
