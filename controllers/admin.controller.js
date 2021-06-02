@@ -70,3 +70,67 @@ module.exports.deleteDate = (req, res, next) => {
         })
         .catch((error) => next(createError(400, error)))
 }
+
+module.exports.createPatient = (req, res, next) => {
+    const userRole = req.session.user.role
+
+    const formatDate = (d) => {
+        var str = d
+        darr = str.split("/")
+        return new Date(parseInt(darr[2]), parseInt(darr[1]) - 1, parseInt(darr[0]))
+    }
+
+    const {name, email, dni, address, zipcode, city, phone, birthdate, sex, insurance_carrier, marital_status} = req.body
+
+    const userInfo = {
+        name, email, dni, address, zipcode, city, phone, birthdate: formatDate(birthdate), sex, insurance_carrier, marital_status, password: "Paciente123"
+    }
+
+    console.log(userRole)
+    console.log(req.body)
+
+    if (userRole === 'Admin') {
+        User.find({dni: dni})
+            .then(user => {
+                if (user.length && user[0].email === email) {
+                    console.log(`el usuario existe`)
+                    res.status(204).json({message: "Ya existe el paciente en la base de datos"})
+                } else if (user.length && user[0].email.includes('provicional')) {
+                    User.findByIdAndUpdate(user[0].id, userInfo, {new: true})
+                        .then((newPatient) => {
+                            res.status(201).json(newPatient)
+                        })
+                        .catch(error => next(createError(400, error)))
+                } else {
+                    console.log('no existe este usuario')
+                    User.create({
+                        name, 
+                        email, 
+                        dni, 
+                        address, 
+                        zipcode, 
+                        city, 
+                        phone, 
+                        birthdate: formatDate(birthdate), 
+                        sex, 
+                        insurance_carrier, 
+                        marital_status, 
+                        password: "Paciente123", 
+                        role: 'Temporary',
+                        activation: {
+                            active: true
+                          }
+                    })
+                        .then((newPatient) => {
+                            res.status(201).json(newPatient)
+                        })
+                        .catch(error => next(createError(400, error)))
+                }
+            })
+            .catch(error => next(createError(400, error)))
+    } else {
+        return res
+            .status(403)
+            .json({message: "No posee suficiente privilegios para hacer esta tarea"})
+    }
+}

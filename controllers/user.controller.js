@@ -29,6 +29,8 @@ module.exports.doLogin = (req, res, next) => {
     .then((user) => {
       if (!user) {
         throw createError(404, "Usuario no encontrado, por favor, intenta nuevamente")
+      } else if (user.role === "Temporary") {
+        console.log(`ESTE USUARIO NO ESTA ACTIVADO`)
       } else if (user.activation.active === false) {
         throw createError(404, "Tu cuenta no ha sido activada, por favor, revisa tu correo.")
       } else {

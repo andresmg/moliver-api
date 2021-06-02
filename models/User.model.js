@@ -82,7 +82,7 @@ const userSchema = new Schema({
   },
   role: {
     type: String,
-    enum: ['Guest', 'Admin'],
+    enum: ['Guest', 'Admin', 'Temporary'],
     default: 'Guest'
   },
   activation: {

@@ -25,3 +25,8 @@ router.get('/delete-date/:id',
     authMiddleware.isAuthenticated,
     adminController.deleteDate
 )
+
+router.post('/patient/add',
+    authMiddleware.isAuthenticated,
+    adminController.createPatient
+)
