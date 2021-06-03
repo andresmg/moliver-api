@@ -1,13 +1,15 @@
-require("dotenv").config()
-require("../config/db.config")
-const faker = require("faker")
+require('dotenv').config()
+require('../config/db.config')
+const faker = require('faker')
 
-const User = require("../models/User.model")
-const Biopsy = require("../models/Biopsy.model")
-const BiopsyNumber = require("../models/BiopsyNumber.model")
+const User = require('../models/User.model')
+const Biopsy = require('../models/Biopsy.model')
+const BiopsyNumber = require('../models/BiopsyNumber.model')
+const History = require('../models/History.model')
 
 const userN = 90
 const biopsyN = 3
+const historyN = 3
 
 let num = 1
 
@@ -27,7 +29,7 @@ Promise.all([
       const user = new User({
         name: faker.name.findName(),
         email: faker.internet.email(),
-        password: "Moliver123",
+        password: 'Moliver123',
         dni: faker.random.number({min: 4000000, max: 20000000}),
         avatar: 'https://res.cloudinary.com/dutvbml2i/image/upload/v1607677904/moliver/foto-perfil.jpg',
         address: faker.address.streetAddress(),
@@ -62,6 +64,20 @@ Promise.all([
             biopsy.save()
               .then(c => {
                 console.log(`biopsy added for ${u.email}`)
+              })
+              .catch((e) => console.log(e))
+          }
+          for (m = 0; m < historyN; m++) {
+            const history = new History({
+              user: u.id,
+              date: faker.date.past(),
+              clinic_history: faker.lorem.words(),
+              diagnostics: faker.lorem.paragraphs(),
+              treatment: faker.lorem.paragraphs()
+            })
+            history.save()
+              .then(c => {
+                console.log(`history added for ${u.email}`)
               })
               .catch((e) => console.log(e))
           }

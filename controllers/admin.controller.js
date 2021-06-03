@@ -1,16 +1,17 @@
-const mongoose = require("mongoose")
+const mongoose = require('mongoose')
 
-const User = require("../models/User.model")
-const Biopsy = require("../models/Biopsy.model")
-const createError = require("http-errors")
+const User = require('../models/User.model')
+const Biopsy = require('../models/Biopsy.model')
+const createError = require('http-errors')
+const History = require('../models/History.model')
 
 
-module.exports.getAllbiopsies = (req, res, next) => {
+module.exports.getAllBiopsies = (req, res, next) => {
     const userRole = req.session.user.role
 
     if (userRole === 'Admin') {
         Biopsy.find()
-            .populate("user")
+            .populate('user')
             .sort({updatedAt: -1})
             .then((biopsies) => {
                 res.status(201).json(biopsies)
@@ -18,7 +19,7 @@ module.exports.getAllbiopsies = (req, res, next) => {
             .catch(next)
     } else {
         req.session.destroy()
-        res.status(204).json({message: "¡No tiene suficientes privilegios para realizar esta acción!"})
+        res.status(204).json({message: '¡No tiene suficientes privilegios para realizar esta acción!'})
     }
 }
 
@@ -34,7 +35,25 @@ module.exports.getAllPatients = (req, res, next) => {
             .catch(next)
     } else {
         req.session.destroy()
-        res.status(204).json({message: "¡No tiene suficientes privilegios para realizar esta acción!"})
+        res.status(204).json({message: '¡No tiene suficientes privilegios para realizar esta acción!'})
+    }
+}
+
+module.exports.getPatientHistories = (req, res, next) => {
+    const userRole = req.session.user.role
+    const id = req.params.id
+
+    if (userRole === 'Admin') {
+        History.find({user: id})
+            .populate('user')
+            .sort({updatedAt: -1})
+            .then((histories) => {
+                res.status(201).json(histories)
+            })
+            .catch(next)
+    } else {
+        req.session.destroy()
+        res.status(204).json({message: '¡No tiene suficientes privilegios para realizar esta acción!'})
     }
 }
 
@@ -76,14 +95,14 @@ module.exports.createPatient = (req, res, next) => {
 
     const formatDate = (d) => {
         var str = d
-        darr = str.split("/")
+        darr = str.split('/')
         return new Date(parseInt(darr[2]), parseInt(darr[1]) - 1, parseInt(darr[0]))
     }
 
     const {name, email, dni, address, zipcode, city, phone, birthdate, sex, insurance_carrier, marital_status} = req.body
 
     const userInfo = {
-        name, email, dni, address, zipcode, city, phone, birthdate: formatDate(birthdate), sex, insurance_carrier, marital_status, password: "Paciente123"
+        name, email, dni, address, zipcode, city, phone, birthdate: formatDate(birthdate), sex, insurance_carrier, marital_status, password: 'Paciente123'
     }
 
     console.log(userRole)
@@ -94,7 +113,7 @@ module.exports.createPatient = (req, res, next) => {
             .then(user => {
                 if (user.length && user[0].email === email) {
                     console.log(`el usuario existe`)
-                    res.status(204).json({message: "Ya existe el paciente en la base de datos"})
+                    res.status(204).json({message: 'Ya existe el paciente en la base de datos'})
                 } else if (user.length && user[0].email.includes('provicional')) {
                     User.findByIdAndUpdate(user[0].id, userInfo, {new: true})
                         .then((newPatient) => {
@@ -104,22 +123,22 @@ module.exports.createPatient = (req, res, next) => {
                 } else {
                     console.log('no existe este usuario')
                     User.create({
-                        name, 
-                        email, 
-                        dni, 
-                        address, 
-                        zipcode, 
-                        city, 
-                        phone, 
-                        birthdate: formatDate(birthdate), 
-                        sex, 
-                        insurance_carrier, 
-                        marital_status, 
-                        password: "Paciente123", 
+                        name,
+                        email,
+                        dni,
+                        address,
+                        zipcode,
+                        city,
+                        phone,
+                        birthdate: formatDate(birthdate),
+                        sex,
+                        insurance_carrier,
+                        marital_status,
+                        password: 'Paciente123',
                         role: 'Temporary',
                         activation: {
                             active: true
-                          }
+                        }
                     })
                         .then((newPatient) => {
                             res.status(201).json(newPatient)
@@ -131,6 +150,6 @@ module.exports.createPatient = (req, res, next) => {
     } else {
         return res
             .status(403)
-            .json({message: "No posee suficiente privilegios para hacer esta tarea"})
+            .json({message: 'No posee suficiente privilegios para hacer esta tarea'})
     }
 }

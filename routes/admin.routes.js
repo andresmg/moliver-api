@@ -8,12 +8,17 @@ module.exports = router
 //User controller
 router.get("/biopsies",
     authMiddleware.isAuthenticated,
-    adminController.getAllbiopsies
+    adminController.getAllBiopsies
 )
 
 router.get('/patients',
     authMiddleware.isAuthenticated,
     adminController.getAllPatients
+)
+
+router.get("/histories/:id",
+    authMiddleware.isAuthenticated,
+    adminController.getPatientHistories
 )
 
 router.post('/add-date',
