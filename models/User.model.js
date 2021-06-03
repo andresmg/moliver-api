@@ -76,6 +76,10 @@ const userSchema = new Schema({
     type: String,
     trim: true
   },
+  work: {
+    type: String,
+    trim: true
+  },
   marital_status: {
     type: String,
     enum: ['Soltero/a', 'Casado/a']

@@ -16,7 +16,8 @@ let num = 1
 Promise.all([
   User.deleteMany(),
   Biopsy.deleteMany(),
-  BiopsyNumber.deleteMany()
+  BiopsyNumber.deleteMany(),
+  History.deleteMany()
 ])
   .then(() => {
 
@@ -37,6 +38,7 @@ Promise.all([
         city: faker.address.city(),
         birthdate: faker.date.past(),
         sex: faker.random.arrayElement(['Hombre', 'Mujer']),
+        work: faker.name.jobType(),
         next_date: {
           isDate: true,
           date: faker.date.future()
@@ -71,6 +73,7 @@ Promise.all([
             const history = new History({
               user: u.id,
               date: faker.date.past(),
+              visit_reason: faker.lorem.words(),
               clinic_history: faker.lorem.words(),
               diagnostics: faker.lorem.paragraphs(),
               treatment: faker.lorem.paragraphs()

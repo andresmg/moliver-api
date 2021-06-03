@@ -11,6 +11,9 @@ const historySchema = new Schema({
         type: Date,
         required: [true, 'La fecha es obligatoria']
     },
+    visit_reason: {
+        type: String
+    },
     clinic_history: {
         type: String
     },
