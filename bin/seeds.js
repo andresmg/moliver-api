@@ -6,10 +6,12 @@ const User = require('../models/User.model')
 const Biopsy = require('../models/Biopsy.model')
 const BiopsyNumber = require('../models/BiopsyNumber.model')
 const History = require('../models/History.model')
+const Blog = require('../models/Blog.model')
 
 const userN = 90
 const biopsyN = 3
 const historyN = 3
+const blogN = 1
 
 let num = 1
 
@@ -17,7 +19,8 @@ Promise.all([
   User.deleteMany(),
   Biopsy.deleteMany(),
   BiopsyNumber.deleteMany(),
-  History.deleteMany()
+  History.deleteMany(),
+  Blog.deleteMany()
 ])
   .then(() => {
 
@@ -81,6 +84,19 @@ Promise.all([
             history.save()
               .then(c => {
                 console.log(`history added for ${u.email}`)
+              })
+              .catch((e) => console.log(e))
+          }
+          for (let n = 0; n < blogN; n++) {
+            const blog = new Blog({
+              title: faker.lorem.words(),
+              content: faker.lorem.paragraphs(5),
+              authorId: u.id,
+              picPath: faker.image.image()
+            })
+            blog.save()
+              .then(blogitem => {
+                console.log(`blog creado ${blogitem.title}`)
               })
               .catch((e) => console.log(e))
           }

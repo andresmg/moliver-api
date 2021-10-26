@@ -84,7 +84,6 @@ module.exports.deleteDate = (req, res, next) => {
         new: true
     })
         .then((u) => {
-            console.log(u)
             res.status(201).json(u)
         })
         .catch((error) => next(createError(400, error)))
@@ -99,14 +98,11 @@ module.exports.createPatient = (req, res, next) => {
         return new Date(parseInt(darr[2]), parseInt(darr[1]) - 1, parseInt(darr[0]))
     }
 
-    const {name, email, dni, address, zipcode, city, phone, birthdate, sex, insurance_carrier, marital_status} = req.body
+    const {name, email, dni, address, zipcode, city, phone, birthdate, sex, work, insurance_carrier, marital_status} = req.body
 
     const userInfo = {
-        name, email, dni, address, zipcode, city, phone, birthdate: formatDate(birthdate), sex, insurance_carrier, marital_status, password: 'Paciente123'
+        name, email, dni, address, zipcode, city, phone, birthdate: formatDate(birthdate), sex, work, insurance_carrier, marital_status, password: 'Paciente123'
     }
-
-    console.log(userRole)
-    console.log(req.body)
 
     if (userRole === 'Admin') {
         User.find({dni: dni})
@@ -132,6 +128,7 @@ module.exports.createPatient = (req, res, next) => {
                         phone,
                         birthdate: formatDate(birthdate),
                         sex,
+                        work, 
                         insurance_carrier,
                         marital_status,
                         password: 'Paciente123',

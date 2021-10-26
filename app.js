@@ -42,10 +42,12 @@ const userRouter = require('./routes/user.routes.js')
 const crudRouter = require('./routes/crud.routes.js')
 const adminRouter = require('./routes/admin.routes.js')
 const biopsyRouter = require('./routes/biopsy.routes.js')
+const blogRouter = require('./routes/blog.routes.js')
 app.use('/', userRouter)
 app.use('/', crudRouter)
 app.use('/', adminRouter)
 app.use('/', biopsyRouter)
+app.use('/', blogRouter)
 
 
 // catch 404 and forward to error handler
