@@ -13,6 +13,7 @@ const transport = nodemailer.createTransport({
   },
 })
 
+
 module.exports.sendValidationEmail = (email, activationToken, name) => {
   transport.sendMail({
     to: email,
