@@ -24,6 +24,7 @@ Promise.all([
 ])
   .then(() => {
 
+    
     const biopsynumber = new BiopsyNumber()
     biopsynumber.save()
       .then(b => console.log('paciente creado'))
