@@ -59,7 +59,6 @@ module.exports.addBiopsy = (req, res, next) => {
             .catch(e => console.log(e))
     }
 
-
     if (userRole === 'Admin') {
         if (getDay == 1) {
             BiopsyNumber.find()
