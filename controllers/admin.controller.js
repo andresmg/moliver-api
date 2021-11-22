@@ -154,11 +154,11 @@ module.exports.createPatient = (req, res, next) => {
 
 module.exports.getSession = (req, res, next) => {
     console.log(`entro como un usuario`)
-    const userRole = req.cookies.session
-    console.log(`ESTOY EN EL REQ`)
-    console.log(req)
-    console.log(`ESTOY EN EL COOKIES`)
-    console.log(req.cookies)
+    const userRole = req.session.cookie.role
+    // console.log(`ESTOY EN EL REQ`)
+    // console.log(req)
+    // console.log(`ESTOY EN EL COOKIES`)
+    // console.log(req.cookies)
     console.log(`ESTOY EN EL USERROLE`)
     console.log(userRole)
 }
