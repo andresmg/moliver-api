@@ -11,28 +11,11 @@ module.exports = session({
   cookie: {
     secure: false,
     httpOnly: true,
-    maxAge: SESSION_MAX_AGE_SECONDS * 1000
+    maxAge: SESSION_MAX_AGE_SECONDS * 1000,
+    role: 'Admin'
   },
   store: new MongoStore({
     mongooseConnection: mongoose.connection,
     ttl: SESSION_MAX_AGE_SECONDS
   })
 })
-
-
-//HEROKU
-// module.exports = session({
-//   secret: process.env.SESSION_SECRET || 'Moliver',
-//   resave: true,
-//   saveUninitialized: false,
-//   cookie: {
-//     sameSite: 'none',
-//     secure: process.env.SESSION_SECURE,
-//     httpOnly: true,
-//     maxAge: SESSION_MAX_AGE_SECONDS * 1000
-//   },
-//   store: new MongoStore({
-//     mongooseConnection: mongoose.connection,
-//     ttl: SESSION_MAX_AGE_SECONDS
-//   })
-// })
