@@ -11,8 +11,7 @@ module.exports = session({
   cookie: {
     secure: false,
     httpOnly: true,
-    maxAge: SESSION_MAX_AGE_SECONDS * 1000,
-    role: 'Admin'
+    maxAge: SESSION_MAX_AGE_SECONDS * 1000
   },
   store: new MongoStore({
     mongooseConnection: mongoose.connection,
