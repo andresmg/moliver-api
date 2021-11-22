@@ -9,7 +9,7 @@ const History = require('../models/History.model')
 module.exports.getAllBiopsies = (req, res, next) => {
     const userRole = req.session.user.role
 
-    if (userRole === 'Admin') {
+    // if (userRole === 'Admin') {
         console.log(`entro como ${userRole}`)
         Biopsy.find()
             .populate('user')
@@ -18,10 +18,10 @@ module.exports.getAllBiopsies = (req, res, next) => {
                 res.status(201).json(biopsies)
             })
             .catch(next)
-    } else {
-        req.session.destroy()
-        res.status(204).json({message: '¡No tiene suficientes privilegios para realizar esta acción!'})
-    }
+    // } else {
+    //     req.session.destroy()
+    //     res.status(204).json({message: '¡No tiene suficientes privilegios para realizar esta acción!'})
+    // }
 }
 
 module.exports.getAllPatients = (req, res, next) => {

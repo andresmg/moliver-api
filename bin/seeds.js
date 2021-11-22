@@ -8,7 +8,7 @@ const BiopsyNumber = require('../models/BiopsyNumber.model')
 const History = require('../models/History.model')
 const Blog = require('../models/Blog.model')
 
-const userN = 90
+const userN = 10
 const biopsyN = 3
 const historyN = 3
 const blogN = 1
@@ -24,7 +24,7 @@ Promise.all([
 ])
   .then(() => {
 
-    
+
     const biopsynumber = new BiopsyNumber()
     biopsynumber.save()
       .then(b => console.log('paciente creado'))
