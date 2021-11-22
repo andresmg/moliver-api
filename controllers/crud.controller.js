@@ -89,44 +89,44 @@ module.exports.createUser = (req, res, next) => {
     .catch(e => console.log(e))
 }
 
-module.exports.deleteUser = (req, res, next) => {
-  const id = req.params.id
-  const userId = req.session.user.id
+// module.exports.deleteUser = (req, res, next) => {
+//   const id = req.params.id
+//   const userId = req.session.user.id
 
-  if (id === userId) {
-    User.findByIdAndDelete(id)
-      .then(() => {
-        req.session.destroy()
-        res.status(204).json({message: 'Usuario eliminado exitosamente.'})
-      })
-      .catch(next)
-  } else {
-    return res
-      .status(403)
-      .json({message: "No posees los privilegios necesarios para eliminar este usuario."})
-  }
-}
+//   if (id === userId) {
+//     User.findByIdAndDelete(id)
+//       .then(() => {
+//         req.session.destroy()
+//         res.status(204).json({message: 'Usuario eliminado exitosamente.'})
+//       })
+//       .catch(next)
+//   } else {
+//     return res
+//       .status(403)
+//       .json({message: "No posees los privilegios necesarios para eliminar este usuario."})
+//   }
+// }
 
-module.exports.readUser = (req, res, next) => {
-  const id = req.params.id
-  const userId = req.session.user.id
+// module.exports.readUser = (req, res, next) => {
+//   const id = req.params.id
+//   const userId = req.session.user.id
 
-  User.findById(id)
-    .then((user) => {
-      if (userId === id) {
-        res.status(201).json({
-          user,
-          message: `Perfil de ${user.name}`
-        })
-      } else {
-        req.session.destroy()
-        res.status(204).json({
-          message: `No tienes los privilegios necesarios para realizar esta tarea.`
-        })
-      }
-    })
-    .catch((error) => next(error))
-}
+//   User.findById(id)
+//     .then((user) => {
+//       if (userId === id) {
+//         res.status(201).json({
+//           user,
+//           message: `Perfil de ${user.name}`
+//         })
+//       } else {
+//         req.session.destroy()
+//         res.status(204).json({
+//           message: `No tienes los privilegios necesarios para realizar esta tarea.`
+//         })
+//       }
+//     })
+//     .catch((error) => next(error))
+// }
 
 module.exports.updateUser = (req, res, next) => {
   const {id} = req.params

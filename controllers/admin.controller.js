@@ -10,7 +10,7 @@ module.exports.getAllBiopsies = (req, res, next) => {
     const userRole = req.session.user.role
 
     // if (userRole === 'Admin') {
-        console.log(`entro como ${userRole}`)
+        console.log(`entro como un usuario ${userRole}`)
         Biopsy.find()
             .populate('user')
             .sort({updatedAt: -1})
