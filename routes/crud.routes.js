@@ -13,17 +13,17 @@ router.post(
   crudController.createUser
 )
 
-router.get(
-  "/user/:id",
-  authMiddleware.isAuthenticated,
-  crudController.readUser
-)
+// router.get(
+//   "/user/:id",
+//   authMiddleware.isAuthenticated,
+//   crudController.readUser
+// )
 
-router.get(
-  "/user/:id/delete",
-  authMiddleware.isAuthenticated,
-  crudController.deleteUser
-)
+// router.get(
+//   "/user/:id/delete",
+//   authMiddleware.isAuthenticated,
+//   crudController.deleteUser
+// )
 
 router.patch(
   "/user-profile/:id/edit",

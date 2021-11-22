@@ -107,26 +107,26 @@ module.exports.createUser = (req, res, next) => {
 //   }
 // }
 
-module.exports.readUser = (req, res, next) => {
-  const id = req.params.id
-  const userId = req.session.user.id
+// module.exports.readUser = (req, res, next) => {
+//   const id = req.params.id
+//   const userId = req.session.user.id
 
-  User.findById(id)
-    .then((user) => {
-      if (userId === id) {
-        res.status(201).json({
-          user,
-          message: `Perfil de ${user.name}`
-        })
-      } else {
-        req.session.destroy()
-        res.status(204).json({
-          message: `No tienes los privilegios necesarios para realizar esta tarea.`
-        })
-      }
-    })
-    .catch((error) => next(error))
-}
+//   User.findById(id)
+//     .then((user) => {
+//       if (userId === id) {
+//         res.status(201).json({
+//           user,
+//           message: `Perfil de ${user.name}`
+//         })
+//       } else {
+//         req.session.destroy()
+//         res.status(204).json({
+//           message: `No tienes los privilegios necesarios para realizar esta tarea.`
+//         })
+//       }
+//     })
+//     .catch((error) => next(error))
+// }
 
 module.exports.updateUser = (req, res, next) => {
   const {id} = req.params
