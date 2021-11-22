@@ -154,5 +154,6 @@ module.exports.createPatient = (req, res, next) => {
 
 module.exports.getSession = (req, res, next) => {
     const userRole = req.session.user.role
+    console.log(`entro como un usuario`)
     console.log(`ESTOY EN EL MIDDLEWARE ${userRole}`)
 }
