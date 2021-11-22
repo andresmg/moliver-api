@@ -7,7 +7,7 @@ module.exports = router
 
 //User controller
 router.get("/biopsies",
-    //authMiddleware.isAuthenticated,
+    authMiddleware.isAuthenticated,
     adminController.getAllBiopsies
 )
 
