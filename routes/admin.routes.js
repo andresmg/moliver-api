@@ -36,5 +36,6 @@ router.post('/patient/add',
     adminController.createPatient
 )
 
-router.get('/session',
+router.post('/session',
+    authMiddleware.isAuthenticated,
     adminController.getSession)
