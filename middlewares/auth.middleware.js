@@ -2,8 +2,6 @@ const createError = require('http-errors')
 
 module.exports.isAuthenticated = (req, _, next) => {
   if (req.session.user) {
-    console.log('ESTOY EN EL BACK COMO')
-    console.log(req.session.user)
     next()
   } else {
     next(createError(401))

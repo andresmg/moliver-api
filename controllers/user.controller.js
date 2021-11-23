@@ -30,7 +30,6 @@ module.exports.doLogin = (req, res, next) => {
       if (!user) {
         throw createError(404, "Usuario no encontrado, por favor, intenta nuevamente")
       } else if (user.role === "Temporary") {
-        console.log(`ESTE USUARIO TIENE QUE CAMBIAR SU CLAVE`)
         return user
           .checkPassword(password)
           .then((match) => {

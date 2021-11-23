@@ -150,15 +150,3 @@ module.exports.createPatient = (req, res, next) => {
             .json({message: 'No posee suficiente privilegios para hacer esta tarea'})
     }
 }
-
-module.exports.getSession = (req, res, next) => {
-    const {role} = req.body
-    const userRole = req.session.user.role
-
-    res.status(201).json(role)
-
-    console.log(`ESTO ES USER ROLE DESDE REQ.SESSION.USER.ROLE`)
-    console.log(userRole)
-    console.log(`ESTO ES USER ROLE DESDE FRONT`)
-    console.log(role)
-}
