@@ -6,7 +6,7 @@ const adminController = require("../controllers/admin.controller")
 module.exports = router
 
 //User controller
-router.get("/biopsies",
+router.post("/biopsies",
     authMiddleware.isAuthenticated,
     adminController.getAllBiopsies
 )
@@ -37,6 +37,5 @@ router.post('/patient/add',
 )
 
 router.post('/session',
-    authMiddleware.isAuthenticated,
     adminController.getSession
 )
