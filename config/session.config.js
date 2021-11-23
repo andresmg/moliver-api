@@ -3,13 +3,12 @@ const MongoStore = require('connect-mongo')(session)
 const mongoose = require('mongoose')
 const SESSION_MAX_AGE_SECONDS = Number(process.env.SESSION_MAX_AGE_SECONDS) || 60 * 60 * 24 * 7
 
-//LOCALHOST
+
 module.exports = session({
   secret: process.env.SESSION_SECRET || 'Moliver',
   resave: true,
   saveUninitialized: false,
   cookie: {
-    secure: false,
     httpOnly: true,
     maxAge: SESSION_MAX_AGE_SECONDS * 1000
   },
