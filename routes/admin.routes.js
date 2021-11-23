@@ -38,4 +38,5 @@ router.post('/patient/add',
 
 router.post('/session',
     authMiddleware.isAuthenticated,
-    adminController.getSession)
+    adminController.getSession
+)
