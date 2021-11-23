@@ -10,7 +10,6 @@ module.exports.getAllBiopsies = (req, res, next) => {
     const userRole = req.session.user.role
 
     if (userRole === 'Admin') {
-    console.log(`entro como un usuario ${userRole}`)
     Biopsy.find()
         .populate('user')
         .sort({updatedAt: -1})
@@ -27,24 +26,24 @@ module.exports.getAllBiopsies = (req, res, next) => {
 module.exports.getAllPatients = (req, res, next) => {
     const userRole = req.session.user.role
 
-    // if (userRole === 'Admin') {
+    if (userRole === 'Admin') {
     User.find({role: {$ne: 'Admin'}})
         .sort({name: 1})
         .then(patients => {
             res.status(201).json(patients)
         })
         .catch(next)
-    // } else {
-    //     req.session.destroy()
-    //     res.status(204).json({message: '¡No tiene suficientes privilegios para realizar esta acción!'})
-    // }
+    } else {
+        req.session.destroy()
+        res.status(204).json({message: '¡No tiene suficientes privilegios para realizar esta acción!'})
+    }
 }
 
 module.exports.getPatientHistories = (req, res, next) => {
     const userRole = req.session.user.role
     const id = req.params.id
 
-    // if (userRole === 'Admin') {
+    if (userRole === 'Admin') {
     History.find({user: id})
         .populate('user')
         .sort({updatedAt: -1})
@@ -52,10 +51,10 @@ module.exports.getPatientHistories = (req, res, next) => {
             res.status(201).json(histories)
         })
         .catch(next)
-    // } else {
-    //     req.session.destroy()
-    //     res.status(204).json({message: '¡No tiene suficientes privilegios para realizar esta acción!'})
-    // }
+    } else {
+        req.session.destroy()
+        res.status(204).json({message: '¡No tiene suficientes privilegios para realizar esta acción!'})
+    }
 }
 
 module.exports.createDate = (req, res, next) => {
@@ -154,13 +153,12 @@ module.exports.createPatient = (req, res, next) => {
 
 module.exports.getSession = (req, res, next) => {
     const {role} = req.body
+    const userRole = req.session.user.role
 
     res.status(201).json(role)
 
-    // console.log(`ESTOY EN EL REQ`)
-    // console.log(req)
-    // console.log(`ESTOY EN EL COOKIES`)
-    // console.log(req.cookies)
-    console.log(`ESTOY EN EL USERROLE`)
+    console.log(`ESTO ES USER ROLE DESDE REQ.SESSION.USER.ROLE`)
+    console.log(userRole)
+    console.log(`ESTO ES USER ROLE DESDE FRONT`)
     console.log(role)
 }
