@@ -12,5 +12,11 @@ router.get("/biopsy/:id/delete",
 )
 
 router.post('/biopsy/add',
-authMiddleware.isAuthenticated,
-biopsyController.addBiopsy)
+    authMiddleware.isAuthenticated,
+    biopsyController.addBiopsy
+)
+
+router.patch('/biopsy/:id/update',
+    authMiddleware.isAuthenticated,
+    biopsyController.updateBiopsy
+)
