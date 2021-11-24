@@ -5,8 +5,6 @@ const Biopsy = require("../models/Biopsy.model")
 const BiopsyNumber = require("../models/BiopsyNumber.model")
 const createError = require("http-errors")
 
-
-
 module.exports.dropBiopsy = (req, res, next) => {
     const id = req.params.id
     const userRole = req.session.user.role
