@@ -22,6 +22,7 @@ module.exports.getAllBiopsies = (req, res, next) => {
     }
 }
 
+
 module.exports.getAllPatients = (req, res, next) => {
     const userRole = req.session.user.role
 
@@ -37,6 +38,7 @@ module.exports.getAllPatients = (req, res, next) => {
         res.status(204).json({message: '¡No tiene suficientes privilegios para realizar esta acción!'})
     }
 }
+
 
 module.exports.getPatientHistories = (req, res, next) => {
     const userRole = req.session.user.role
