@@ -5,7 +5,6 @@ const User = require('../models/User.model')
 const Biopsy = require('../models/Biopsy.model')
 const History = require('../models/History.model')
 
-
 module.exports.getAllBiopsies = (req, res, next) => {
     const userRole = req.session.user.role
 

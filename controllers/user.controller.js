@@ -1,10 +1,9 @@
 const mongoose = require("mongoose")
+const nodemailer = require("../config/mailer.config")
 
 const User = require("../models/User.model")
 const Biopsy = require("../models/Biopsy.model")
 const createError = require("http-errors")
-
-const nodemailer = require("../config/mailer.config")
 
 module.exports.index = (req, res, next) => {
   res.json({title: "Welcome to Moliver!"})
