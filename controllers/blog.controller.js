@@ -15,3 +15,20 @@ module.exports.getAllBlogs = (req, res, next) => {
         })
         .catch(next)
 }
+
+module.exports.createBlog = (req, res, next) => {
+    const { data } = req.body
+
+    console.log(data)
+
+    Blog.create({
+        title: data.title,
+        content: data.content,
+        authorId: data.id,
+        picPath: data.picPath
+    })
+        .then((newBlog) => {
+          res.status(201).json(newBlog)
+        })
+        .catch(next)
+}

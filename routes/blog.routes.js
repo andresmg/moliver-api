@@ -10,3 +10,8 @@ router.get("/blogs",
     authMiddleware.isNotAuthenticated,
     blogController.getAllBlogs
 )
+
+router.post("/blogs/add",
+    authMiddleware.isAuthenticated,
+    blogController.createBlog
+)
