@@ -22,6 +22,7 @@ module.exports.dropBiopsy = (req, res, next) => {
     }
 }
 
+
 module.exports.updateBiopsy = (req, res, next) => {
     const id = req.params.id
     const userRole = req.session.user.role
