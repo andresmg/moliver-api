@@ -5,6 +5,7 @@ const Biopsy = require("../models/Biopsy.model")
 const BiopsyNumber = require("../models/BiopsyNumber.model")
 const createError = require("http-errors")
 
+
 module.exports.dropBiopsy = (req, res, next) => {
     const id = req.params.id
     const userRole = req.session.user.role
@@ -22,6 +23,7 @@ module.exports.dropBiopsy = (req, res, next) => {
     }
 }
 
+
 module.exports.updateBiopsy = (req, res, next) => {
     const id = req.params.id
     const userRole = req.session.user.role
@@ -38,6 +40,7 @@ module.exports.updateBiopsy = (req, res, next) => {
         res.status(204).json({message: '¡No tiene suficientes privilegios para realizar esta acción!'})
     }
 }
+
 
 module.exports.addBiopsy = (req, res, next) => {
     const userRole = req.session.user.role
