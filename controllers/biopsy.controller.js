@@ -1,9 +1,9 @@
 const mongoose = require("mongoose")
+const createError = require("http-errors")
 
 const User = require("../models/User.model")
 const Biopsy = require("../models/Biopsy.model")
 const BiopsyNumber = require("../models/BiopsyNumber.model")
-const createError = require("http-errors")
 
 module.exports.dropBiopsy = (req, res, next) => {
     const id = req.params.id
