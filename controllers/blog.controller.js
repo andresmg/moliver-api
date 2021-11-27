@@ -19,6 +19,8 @@ module.exports.getAllBlogs = (req, res, next) => {
 module.exports.createBlog = (req, res, next) => {
     const { data } = req.body
 
+    console.log(req.body)
+
     console.log(data)
 
     Blog.create({
