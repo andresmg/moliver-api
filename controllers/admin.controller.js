@@ -9,13 +9,13 @@ module.exports.getAllBiopsies = (req, res, next) => {
     const userRole = req.session.user.role
 
     if (userRole === 'Admin') {
-    Biopsy.find()
-        .populate('user')
-        .sort({updatedAt: -1})
-        .then((biopsies) => {
-            res.status(201).json(biopsies)
-        })
-        .catch(next)
+        Biopsy.find()
+            .populate('user')
+            .sort({updatedAt: -1})
+            .then((biopsies) => {
+                res.status(201).json(biopsies)
+            })
+            .catch(next)
     } else {
         req.session.destroy()
         res.status(204).json({message: '¡No tiene suficientes privilegios para realizar esta acción!'})
@@ -27,12 +27,12 @@ module.exports.getAllPatients = (req, res, next) => {
     const userRole = req.session.user.role
 
     if (userRole === 'Admin') {
-    User.find({role: {$ne: 'Admin'}})
-        .sort({name: 1})
-        .then(patients => {
-            res.status(201).json(patients)
-        })
-        .catch(next)
+        User.find({role: {$ne: 'Admin'}})
+            .sort({name: 1})
+            .then(patients => {
+                res.status(201).json(patients)
+            })
+            .catch(next)
     } else {
         req.session.destroy()
         res.status(204).json({message: '¡No tiene suficientes privilegios para realizar esta acción!'})
@@ -45,13 +45,13 @@ module.exports.getPatientHistories = (req, res, next) => {
     const id = req.params.id
 
     if (userRole === 'Admin') {
-    History.find({user: id})
-        .populate('user')
-        .sort({updatedAt: -1})
-        .then((histories) => {
-            res.status(201).json(histories)
-        })
-        .catch(next)
+        History.find({user: id})
+            .populate('user')
+            .sort({updatedAt: -1})
+            .then((histories) => {
+                res.status(201).json(histories)
+            })
+            .catch(next)
     } else {
         req.session.destroy()
         res.status(204).json({message: '¡No tiene suficientes privilegios para realizar esta acción!'})
@@ -149,5 +149,31 @@ module.exports.createPatient = (req, res, next) => {
         return res
             .status(403)
             .json({message: 'No posee suficiente privilegios para hacer esta tarea'})
+    }
+}
+
+module.exports.createPatientHistory = (req, res, next) => {
+    const id = req.params.id
+    const data = req.body.data
+    const userRole = req.session.user.role
+
+    if (userRole === 'Admin') {
+        History.create({
+            user: id,
+            date: data.date,
+            visit_reason: data.visit_reason,
+            clinic_history: data.clinic_history,
+            diagnostics: data.diagnostic,
+            treatment: data.treatment
+        })
+
+        History.find({user: id})
+            .then((newHistory) => {
+                res.status(201).json(newHistory)
+            })
+            .catch(e => console.log(e))
+    } else {
+        req.session.destroy()
+        res.status(204).json({message: '¡No tiene suficientes privilegios para realizar esta acción!'})
     }
 }

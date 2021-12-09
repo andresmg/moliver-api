@@ -35,3 +35,8 @@ router.post('/patient/add',
     authMiddleware.isAuthenticated,
     adminController.createPatient
 )
+
+router.post("/add-history/:id",
+    authMiddleware.isAuthenticated,
+    adminController.createPatientHistory
+)
