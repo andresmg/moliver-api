@@ -7,7 +7,6 @@ module.exports = router
 
 //User controller
 router.get("/blogs",
-    authMiddleware.isNotAuthenticated,
     blogController.getAllBlogs
 )
 

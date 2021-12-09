@@ -166,12 +166,15 @@ module.exports.createPatientHistory = (req, res, next) => {
             diagnostics: data.diagnostic,
             treatment: data.treatment
         })
-
-        History.find({user: id})
-            .then((newHistory) => {
-                res.status(201).json(newHistory)
+            .then(() => {
+                History.find({user: id})
+                .sort({date: -1})
+                    .then((newHistory) => {
+                        res.status(201).json(newHistory)
+                    })
+                    .catch(error => next(createError(400, error)))
             })
-            .catch(e => console.log(e))
+            .catch(error => next(createError(400, error)))
     } else {
         req.session.destroy()
         res.status(204).json({message: '¡No tiene suficientes privilegios para realizar esta acción!'})
