@@ -19,3 +19,8 @@ router.get("/blogs/delete/:id",
     authMiddleware.isAuthenticated,
     blogController.deleteBlog
 )
+
+router.patch("/blogs/update/:id",
+    authMiddleware.isAuthenticated,
+    blogController.updateBlog
+)

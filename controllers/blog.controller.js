@@ -52,3 +52,20 @@ module.exports.deleteBlog = (req, res, next) => {
         res.status(204).json({message: '¡No tiene suficientes privilegios para realizar esta acción!'})
     }
 }
+
+module.exports.updateBlog = (req, res, next) => {
+    const id = req.params.id
+    const userRole = req.session.user.role
+    const data = req.body.data
+
+    if (userRole === 'Admin') {
+        Blog.findByIdAndUpdate(id, data, {new: true})
+            .then((blogcase) => {
+                res.status(201).json(blogcase)
+            })
+            .catch(error => next(createError(400, error)))
+    } else {
+        req.session.destroy()
+        res.status(204).json({message: '¡No tiene suficientes privilegios para realizar esta acción!'})
+    }
+}
