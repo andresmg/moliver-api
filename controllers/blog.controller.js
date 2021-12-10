@@ -38,7 +38,13 @@ module.exports.deleteBlog = (req, res, next) => {
     if (userRole === 'Admin') {
         Blog.findByIdAndDelete(id)
             .then(() => {
-                res.status(200).json({message: 'Blog deleted'})
+                Blog.find()
+                    .populate('authorId')
+                    .sort({updatedAt: -1})
+                    .then(blogs => {
+                        res.status(201).json(blogs)
+                    })
+                    .catch(error => next(createError(400, error)))
             })
             .catch(error => next(createError(400, error)))
     } else {
