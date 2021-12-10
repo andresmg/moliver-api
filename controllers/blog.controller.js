@@ -13,15 +13,11 @@ module.exports.getAllBlogs = (req, res, next) => {
         .then(blogs => {
             res.status(201).json(blogs)
         })
-        .catch(next)
+        .catch(error => next(createError(400, error)))
 }
 
 module.exports.createBlog = (req, res, next) => {
-    const { data } = req.body
-
-    console.log(req.body)
-
-    console.log(data)
+    const {data} = req.body
 
     Blog.create({
         title: data.title,
@@ -30,7 +26,23 @@ module.exports.createBlog = (req, res, next) => {
         picPath: data.picPath
     })
         .then((newBlog) => {
-          res.status(201).json(newBlog)
+            res.status(201).json(newBlog)
         })
-        .catch(next)
+        .catch(error => next(createError(400, error)))
+}
+
+module.exports.deleteBlog = (req, res, next) => {
+    const id = req.params.id
+    const userRole = req.session.user.role
+
+    if (userRole === 'Admin') {
+        Blog.findByIdAndDelete(id)
+            .then(() => {
+                res.status(200).json({message: 'Blog deleted'})
+            })
+            .catch(error => next(createError(400, error)))
+    } else {
+        req.session.destroy()
+        res.status(204).json({message: '¡No tiene suficientes privilegios para realizar esta acción!'})
+    }
 }

@@ -14,3 +14,8 @@ router.post("/blogs/add",
     authMiddleware.isAuthenticated,
     blogController.createBlog
 )
+
+router.get("/blogs/delete/:id",
+    authMiddleware.isAuthenticated,
+    blogController.deleteBlog
+)
