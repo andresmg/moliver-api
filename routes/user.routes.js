@@ -21,3 +21,7 @@ router.get(
   authMiddleware.isNotAuthenticated,
   userController.activateUser
 )
+
+router.post("/google-login",
+  userController.googleLogin
+)

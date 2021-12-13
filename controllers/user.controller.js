@@ -9,6 +9,40 @@ module.exports.index = (req, res, next) => {
   res.json({title: "Welcome to Moliver!"})
 }
 
+module.exports.googleLogin = (req, res, next) => {
+  const userEmail = req.body.gooleUser.email
+
+  User.findOne({email: userEmail})
+    .then((user) => {
+      if (user) {
+        req.session.user = user
+        if (user.role === "Guest") {
+          res.status(201).json(user)
+        }
+      } else {
+        const newUser = new User({
+          name: req.body.gooleUser.displayName,
+          email: req.body.gooleUser.email,
+          password: req.body.gooleUser.uid,
+          role: "Temporary",
+        })
+        bcryptjs
+          .genSalt(saltRounds)
+          .then((salt) => bcryptjs.hash(password, salt))
+        newUser
+          .save()
+          .then((user) => {
+            req.session.user = user
+            if (user.role === "Temporary") {
+              res.status(201).json(user)
+            }
+          })
+          .catch((err) => next(err))
+      }
+    })
+    .catch(next)
+}
+
 module.exports.doLogin = (req, res, next) => {
   const {email, password} = req.body
 
