@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser')
 const mongoose = require('mongoose')
 
 require('./config/db.config')
+const passportConfig = require('./config/passport.config')
 const session = require('./config/session.config')
 const cors = require('./config/cors.config')
 
@@ -27,6 +28,7 @@ app.use(express.urlencoded({extended: false}))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(session)
+app.use(passportConfig)
 
 app.use((req, _, next) => {
   req.currentUser = req.session.user
@@ -36,8 +38,16 @@ app.use((req, _, next) => {
 /**
  * Configure routes
  */
+const userRouter = require('./routes/user.routes.js')
 const crudRouter = require('./routes/crud.routes.js')
+const adminRouter = require('./routes/admin.routes.js')
+const biopsyRouter = require('./routes/biopsy.routes.js')
+const blogRouter = require('./routes/blog.routes.js')
+app.use('/', userRouter)
 app.use('/', crudRouter)
+app.use('/', adminRouter)
+app.use('/', biopsyRouter)
+app.use('/', blogRouter)
 
 
 // catch 404 and forward to error handler
