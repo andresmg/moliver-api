@@ -1,188 +1,71 @@
-const User = require('../models/User.model')
+const Tabledata = require('../models/Tabledata.model')
 
 const createError = require('http-errors')
-const bcryptjs = require('bcryptjs')
-const saltRounds = 10
 const mongoose = require('mongoose')
-const nodemailer = require('../config/mailer.config')
 
-module.exports.createUser = (req, res, next) => {
-  const {email, password, name, dni} = req.body
 
-  if (!email || !password || !name || !dni) {
-    throw createError(400, 'Todos los campos son obligatorios. Por favor ingresa tu nombre, correo, cédula y contraseña.')
-  }
+module.exports.createData = (req, res, next) => {
+  const {data} = req.body
 
-  const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/
-
-  if (!regex.test(password)) {
-    throw createError(400, 'La contraseña debe tener mínimo 6 caracteres y debe contener al menos un número y una letra mayúscula.')
-  }
-
-  User.find({dni: dni})
-    .then(user => {
-      if (user.length && user[0].email.includes('provicional')) {
-        bcryptjs
-          .genSalt(saltRounds)
-          .then((salt) => bcryptjs.hash(password, salt))
-          .then((newHashedPassword) => {
-            return User.findByIdAndUpdate(user[0]._id, {email, password: newHashedPassword, name}, {new: true})
-              .then((user) => {
-                nodemailer.sendValidationEmail(
-                  user.email,
-                  user.activation.token,
-                  user.name
-                )
-                res.json({
-                  message: 'Revisa tu correo para activar tu cuenta.',
-                  token: user.activation.token
-                })
-                throw ('El usuario ya ha sido activado.')
-              })
-              .catch((error) => {
-                if (error instanceof mongoose.Error.ValidationError) {
-                  res.json({error: error.errors})
-                } else if (error.code === 11000) {
-                  throw createError(400, 'El correo o dni ya está registrado.')
-                } else {
-                  next(error)
-                }
-              })
-              .catch(next)
-          })
+  Tabledata.find({dataName: data[0].dataName})
+    .then(reponse => {
+      if (reponse.length > 0) {
+        res.status(400).json({
+          message: 'The data table already exists, please upload a new one.'
+        })
       } else {
-        bcryptjs
-          .genSalt(saltRounds)
-          .then((salt) => bcryptjs.hash(password, salt))
-          .then(() => {
-            return User.create({
-              name,
-              email,
-              password,
-              dni
-            })
+        data.forEach(unidad => {
+          const newItem = new Tabledata({
+            dataName: unidad.dataName,
+            fecha: unidad.fecha,
+            hora: unidad.hora,
+            consumo: unidad.consumo,
+            precio: unidad.precio,
+            coste: unidad.coste
           })
-          .then((user) => {
-            nodemailer.sendValidationEmail(
-              user.email,
-              user.activation.token,
-              user.name
-            )
-            res.json({
-              message: 'Revisa tu correo para activar tu cuenta.',
-              token: user.activation.token
-            })
-            throw ('El usuario ya ha sido activado.')
-          })
-          .catch((error) => {
-            if (error instanceof mongoose.Error.ValidationError) {
-              res.json({error: error.errors})
-            } else if (error.code === 11000) {
-              throw createError(400, 'El correo o dni ya está registrado.')
-            } else {
-              next(error)
-            }
-          })
-          .catch(next)
+          newItem.save()
+        })
       }
     })
-    .catch(e => console.log(e))
-}
-
-// module.exports.deleteUser = (req, res, next) => {
-//   const id = req.params.id
-//   const userId = req.session.user.id
-
-//   if (id === userId) {
-//     User.findByIdAndDelete(id)
-//       .then(() => {
-//         req.session.destroy()
-//         res.status(204).json({message: 'Usuario eliminado exitosamente.'})
-//       })
-//       .catch(next)
-//   } else {
-//     return res
-//       .status(403)
-//       .json({message: "No posees los privilegios necesarios para eliminar este usuario."})
-//   }
-// }
-
-// module.exports.readUser = (req, res, next) => {
-//   const id = req.params.id
-//   const userId = req.session.user.id
-
-//   User.findById(id)
-//     .then((user) => {
-//       if (userId === id) {
-//         res.status(201).json({
-//           user,
-//           message: `Perfil de ${user.name}`
-//         })
-//       } else {
-//         req.session.destroy()
-//         res.status(204).json({
-//           message: `No tienes los privilegios necesarios para realizar esta tarea.`
-//         })
-//       }
-//     })
-//     .catch((error) => next(error))
-// }
-
-module.exports.updateUser = (req, res, next) => {
-  const {id} = req.params
-  const {name, address, phone, city, zipcode, age, birthdate, sex} = req.body
-
-  User.findByIdAndUpdate(id, req.body, {new: true})
-    .then(updatedUser => {
-      res.status(201).json(updatedUser)
-    })
-    .catch(error => next(createError(400, error)))
-
-}
-
-module.exports.updateUserAvatar = (req, res, next) => {
-  const {id} = req.params
-
-  req.body.fd = req.file ? req.file.filename : 'https://res.cloudinary.com/dutvbml2i/image/upload/v1607677904/moliver/foto-perfil.jpg'
-
-  return User.findByIdAndUpdate(id, {
-    avatar: `${process.env.CLOUDINARY_SECURE}/${req.file.originalname}`
-  }, {new: true})
-    .then((updatedAvatar) => {
-      res.status(201).json(updatedAvatar)
-    })
-    .catch((error) => next(error))
-}
-
-module.exports.updatePassword = (req, res, next) => {
-  const id = req.params.id
-  const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/
-
-  console.table(req.body)
-  console.table(req.session.user)
-
-  if (!regex.test(req.body.newpassword)) {
-    throw createError(400, 'Password needs to have at least 6 chars and must contain at least one number, one lowercase and one uppercase letter.')
-  }
-
-  if (req.body.password === 'Paciente123') {
-    bcryptjs
-      .genSalt(saltRounds)
-      .then((salt) => bcryptjs.hash(req.body.newpassword, salt))
-      .then((newHashedPassword) => {
-        return User.findByIdAndUpdate(id, {
-          password: newHashedPassword,
-          role: 'Guest',
-          new: true
-        })
+    .catch(error => {
+      res.status(500).json({
+        message: 'Error while creating the data.'
       })
-      .then(updatedPass => res.status(201).json(updatedPass))
-      .catch(error => next(createError(400, error)))
-  } else {
-    throw createError(400, 'La contraseña actual no es correcta, ponte en contacto con el consultorio.')
-  }
+    })
+
 }
 
+module.exports.getData = (req, res, next) => {
+  Tabledata.find()
+    .then((data) => {
+      res.status(201).json(data)
+    })
+    .catch(next)
+}
 
+module.exports.deleteTableRow = (req, res, next) => {
+  Tabledata.findByIdAndDelete(req.params.id)
+    .then(() => {
+      Tabledata.find()
+        .then((data) => {
+          res.status(201).json(data)
+        })
+        .catch(next)
+    })
+    .catch(next)
+}
 
+module.exports.updateTableRow = (req, res, next) => {
+  const {id, dataName, fecha, hora, consumo, precio, coste} = req.body
 
+  Tabledata.findByIdAndUpdate(id, req.body, {new: true})
+    .then(() => {
+      Tabledata.find()
+        .then(data => {
+          res.status(201).json(data)
+        })
+        .catch(next)
+    })
+    .catch(next)
+
+}
